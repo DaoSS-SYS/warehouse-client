@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.warehouse.warehouseclient.MainController">
+
+    <top>
+        <MenuBar>
+            <Menu text="Справка">
+                <MenuItem text="Об авторе" onAction="#onAbout"/>
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <center>
+        <TabPane>
+            <Tab fx:id="tabCategories" text="Категории" closable="false">
+                <VBox spacing="8">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <HBox spacing="8">
+                        <Button text="Обновить" onAction="#reloadCategories"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Добавить" onAction="#addCategory"/>
+                        <Button text="Изменить" onAction="#editCategory"/>
+                        <Button text="Удалить" onAction="#deleteCategory"/>
+                    </HBox>
+
+                    <TableView fx:id="categoryTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colCatId" text="ID" prefWidth="70"/>
+                            <TableColumn fx:id="colCatName" text="Название" prefWidth="450"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            <Tab fx:id="tabProducts" text="Товары" closable="false">
+                <VBox spacing="8">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <HBox spacing="8">
+                        <Label text="Поиск:"/>
+                        <TextField fx:id="tfProductSearch" promptText="Название товара"/>
+
+                        <Label text="Категория:"/>
+                        <ComboBox fx:id="cbProductCategory" prefWidth="220"/>
+
+                        <Label text="Сортировка:"/>
+                        <ComboBox fx:id="cbProductSort" prefWidth="220"/>
+
+                        <Button text="Применить" onAction="#applyProductFilter"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Добавить" onAction="#addProduct"/>
+                        <Button text="Изменить" onAction="#editProduct"/>
+                        <Button text="Удалить" onAction="#deleteProduct"/>
+                    </HBox>
+
+                    <TableView fx:id="productTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colProdId" text="ID" prefWidth="70"/>
+                            <TableColumn fx:id="colProdName" text="Название" prefWidth="300"/>
+                            <TableColumn fx:id="colProdCategory" text="Категория" prefWidth="240"/>
+                            <TableColumn fx:id="colProdQty" text="Кол-во" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            <Tab fx:id="tabOperations" text="Операции" closable="false">
+                <VBox spacing="8">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <!-- ФИЛЬТРЫ -->
+                    <HBox spacing="8">
+                        <Label text="Товар:"/>
+                        <ComboBox fx:id="cbOpFilterProduct" prefWidth="220"/>
+
+                        <Label text="Сотрудник:"/>
+                        <ComboBox fx:id="cbOpFilterEmployee" prefWidth="220"/>
+
+                        <Label text="Тип:"/>
+                        <ComboBox fx:id="cbOpFilterType" prefWidth="160"/>
+
+                        <Label text="Контрагент:"/>
+                        <ComboBox fx:id="cbOpFilterContractor" prefWidth="220"/>
+
+                        <Button text="Применить" onAction="#applyOperationFilter"/>
+                        <Button text="Сброс" onAction="#resetOperationFilter"/>
+                    </HBox>
+
+                    <!-- ДАТЫ + СОРТИРОВКА -->
+                    <HBox spacing="8">
+                        <Label text="С:"/>
+                        <DatePicker fx:id="dpOpFrom"/>
+                        <Label text="По:"/>
+                        <DatePicker fx:id="dpOpTo"/>
+
+                        <Label text="Сортировка:"/>
+                        <ComboBox fx:id="cbOpSort" prefWidth="220"/>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Обновить" onAction="#reloadOperations"/>
+                        <Button text="Добавить" onAction="#addOperation"/>
+                        <Button text="Удалить" onAction="#deleteOperation"/>
+                    </HBox>
+
+                    <!-- ТАБЛИЦА -->
+                    <TableView fx:id="operationTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colOpId" text="ID" prefWidth="70"/>
+                            <TableColumn fx:id="colOpDate" text="Дата" prefWidth="180"/>
+                            <TableColumn fx:id="colOpProduct" text="Товар" prefWidth="260"/>
+                            <TableColumn fx:id="colOpType" text="Тип" prefWidth="140"/>
+                            <TableColumn fx:id="colOpQty" text="Кол-во" prefWidth="90"/>
+                            <TableColumn fx:id="colOpEmployee" text="Сотрудник" prefWidth="200"/>
+                            <TableColumn fx:id="colOpContractor" text="Контрагент" prefWidth="220"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            <Tab fx:id="tabNewOperation" text="Новая операция" closable="false">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <GridPane hgap="10" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints prefWidth="140"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+
+                        <Label text="Товар:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="cbOpProduct" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="Сотрудник:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="cbOpEmployee" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Тип операции:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="cbOpType" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="Контрагент:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="cbOpContractor" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                        <Label text="Количество:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                        <TextField fx:id="tfOpQty" promptText="Напр. 10" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                        <Label text="Дата/время:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                        <DatePicker fx:id="dpOpDate" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                        <Label text="Время (HH:mm):" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                        <TextField fx:id="tfOpTime" promptText="14:30" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+                    </GridPane>
+
+                    <HBox spacing="8">
+                        <Button text="Обновить справочники" onAction="#reloadOpRefs"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Сохранить операцию" onAction="#createOperation"/>
+                        <Button text="Очистить" onAction="#clearOperationForm"/>
+                    </HBox>
+
+                    <Label fx:id="lblOpStatus" wrapText="true"/>
+                </VBox>
+            </Tab>
+            <Tab fx:id="tabContractors" text="Контрагенты" closable="false">
+                <VBox spacing="8">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <HBox spacing="8">
+                        <Button text="Обновить" onAction="#reloadContractors"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Добавить" onAction="#addContractor"/>
+                        <Button text="Изменить" onAction="#editContractor"/>
+                        <Button text="Удалить" onAction="#deleteContractor"/>
+                    </HBox>
+
+                    <TableView fx:id="contractorTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colContId" text="ID" prefWidth="70"/>
+                            <TableColumn fx:id="colContName" text="Название" prefWidth="260"/>
+                            <TableColumn fx:id="colContPhone" text="Телефон" prefWidth="160"/>
+                            <TableColumn fx:id="colContAddress" text="Адрес" prefWidth="360"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            <Tab fx:id="tabEmployees" text="Сотрудники" closable="false">
+                <VBox spacing="8">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <HBox spacing="8">
+                        <Button text="Обновить" onAction="#reloadEmployees"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Добавить" onAction="#addEmployee"/>
+                        <Button text="Изменить" onAction="#editEmployee"/>
+                        <Button text="Удалить" onAction="#deleteEmployee"/>
+                    </HBox>
+
+                    <TableView fx:id="employeeTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colEmpId" text="ID" prefWidth="70"/>
+                            <TableColumn fx:id="colEmpPosition" text="Должность" prefWidth="220"/>
+                            <TableColumn fx:id="colEmpLastName" text="Фамилия" prefWidth="160"/>
+                            <TableColumn fx:id="colEmpFirstName" text="Имя" prefWidth="160"/>
+                            <TableColumn fx:id="colEmpPatronymic" text="Отчество" prefWidth="180"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            <Tab fx:id="tabPositions" text="Должности" closable="false">
+                <VBox spacing="8">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <HBox spacing="8">
+                        <Button text="Обновить" onAction="#reloadPositions"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Добавить" onAction="#addPosition"/>
+                        <Button text="Изменить" onAction="#editPosition"/>
+                        <Button text="Удалить" onAction="#deletePosition"/>
+                    </HBox>
+
+                    <TableView fx:id="positionTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colPosId" text="ID" prefWidth="70"/>
+                            <TableColumn fx:id="colPosName" text="Название" prefWidth="280"/>
+                            <TableColumn fx:id="colPosSalary" text="Зарплата" prefWidth="160"/>
+                        </columns>
+                    </TableView>
+
+                </VBox>
+            </Tab>
+            <Tab fx:id="tabStats" text="Статистика" closable="false">
+                <VBox spacing="10" xmlns="http://javafx.com/javafx"
+                      xmlns:fx="http://javafx.com/fxml">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+
+                    <HBox spacing="8">
+                        <Label text="Отчёт:"/>
+                        <ComboBox fx:id="cbStatsReport" prefWidth="320"/>
+
+                        <Label text="Период:"/>
+                        <DatePicker fx:id="dpStatsFrom"/>
+                        <Label text="—"/>
+                        <DatePicker fx:id="dpStatsTo"/>
+
+                        <Button text="Построить" onAction="#buildStats"/>
+                        <Button text="Сброс" onAction="#resetStats"/>
+                    </HBox>
+
+                    <Label fx:id="lblStatsInfo" wrapText="true"/>
+
+                    <TableView fx:id="statsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colStatsA" text="Показатель" prefWidth="420"/>
+                            <TableColumn fx:id="colStatsB" text="Значение" prefWidth="240"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>
